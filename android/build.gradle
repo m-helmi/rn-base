@@ -1,0 +1,49 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    ext {
+        buildToolsVersion = "33.0.0"
+        minSdkVersion = 21
+        compileSdkVersion = 33
+        targetSdkVersion = 33
+        supportLibVersion   = "30.0.0"
+        playServicesVersion = "15.0.1"
+        kotlinVersion = "1.8.0"
+        RNNKotlinVersion = kotlinVersion
+        RNNKotlinStdlib = "kotlin-stdlib-jdk8"
+
+        // We use NDK 23 which has both M1 support and is the side-by-side NDK version from AGP.
+        ndkVersion = "23.1.7779620"
+    }
+     repositories {
+        google()
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+        classpath("com.android.tools.build:gradle:7.0.4") 
+        classpath("com.facebook.react:react-native-gradle-plugin")
+    }
+}
+
+def REACT_NATIVE_VERSION = new File(['node', '--print',"JSON.parse(require('fs').readFileSync(require.resolve('react-native/package.json'), 'utf-8')).version"].execute(null, rootDir).text.trim())
+allprojects {
+    repositories {
+        exclusiveContent {
+         
+           filter {
+               includeGroup "com.facebook.react:react-android"
+           }
+           forRepository {
+               maven {
+                   url "$rootDir/../node_modules/react-native/android"
+               }
+           }
+       }
+
+   
+    }
+}
+
